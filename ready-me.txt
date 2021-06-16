@@ -1,0 +1,5 @@
+To the angular application:
+npm run start
+
+To run the server:
+npm run server
