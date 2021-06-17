@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { fromEvent, interval, timer } from 'rxjs';
+import { interval, timer, Observable } from 'rxjs';
 
 @Component({
   selector: 'about',
@@ -12,5 +12,41 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
 
+    this.httpCustomObservable();
+
   }
+
+
+  // Creating Custome Observable:
+
+  public httpCustomObservable() {
+
+    const https$ = Observable.create(observer => {
+      fetch('/api/courses')
+        .then(response => {
+          return response.json();
+        })
+        .then(body => {
+
+          observer.next(body);
+          observer.complete();
+        })
+        .catch(err => {
+          observer.error(err);
+        })
+    })
+
+    https$.subscribe(
+      courses => console.log("courses", courses),
+      () => { },
+      () => console.log("completed")
+    )
+
+  }
+
+
+
+
+
+
 }

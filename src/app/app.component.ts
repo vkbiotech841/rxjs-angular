@@ -60,11 +60,11 @@ export class AppComponent implements OnInit {
     })
   }
 
-  // Problem: As the streams growns, it creates a call-back hell conditions. This is not good.Hence, in javascript,we have RxJs library. 
+  // Problem: As the combination of different streams growns, it creates a call-back hell conditions. This is not good.Hence, in javascript,we have RxJs library. 
 
   /////////////////// RxJs ////////////////////////////////////
   // RxJs(Reactive Extension For Javascript):
-  // Using RxJs, we can defines the pattern of streaming of data and also can combines multiple streams without being in a call-back hell condition.
+  // Using RxJs, we can defines the pattern of streaming of data and also can combines multiple streams without being in a callback hell condition.
 
   // RxJs Observable:
 
@@ -111,15 +111,17 @@ export class AppComponent implements OnInit {
   }
 
   // Subscribe() method can take 3 arguments:
-  // (1) value callback : streams of value, event => console.log("fromEvent click => " + event),
-  // (2) Error handler : stream error, error => console.log("error", error),
-  // (3) complete handler : stream completion event, () => console.log("completed...")
+  // (1) value callback : streams of value,example: event => console.log("fromEvent click => " + event),
+  // (2) Error handler : stream error, example: error => console.log("error", error),
+  // (3) complete handler : stream completion event,example: () => console.log("completed...")
 
   // Observalbe contract: 
-  // According to observable constract, an observable will emit the streams of value or errors out or complete. If an observable is errors out or completes then it will no longer be emitting the value.
+  // According to observable contract, an observable will emit the streams of value or errors out or complete. If an observable is errors out or completes then it will no longer be emitting the value.
 
 
   // Unsubscribing an observable:
+  // If an observalbe is continueously emitting streams of value, it will also consume a lots of memory space. Hence, to prevent memory leaks, it is very to to stop or break the observalbe stream.Hence, an observalbe need to be unscribed.
+
   // Example 03:
 
   public intervalTest$ = interval(1000);
@@ -131,6 +133,10 @@ export class AppComponent implements OnInit {
       subscription.unsubscribe();
     }, 3000);
   }
+
+
+  // What is the difference between promise and observable?
+  // Ans: A promise get executated immediatedly when it is defined. Where as an observalbe can only be executed after subscription.
 
 
 }
