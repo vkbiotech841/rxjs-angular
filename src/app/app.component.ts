@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { fromEvent, interval, timer } from 'rxjs';
+import { concat, fromEvent, interval, of, timer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
     // this.subscribingInterval();
     // this.combineTwoObservable();
     this.intervalUnsubscription();
+    this.observableConcatanation();
   }
 
 
@@ -137,6 +138,20 @@ export class AppComponent implements OnInit {
 
   // What is the difference between promise and observable?
   // Ans: A promise get executated immediatedly when it is defined. Where as an observalbe can only be executed after subscription.
+
+
+  // Obserable concatanation:
+
+  public observableConcatanation() {
+    const source1$ = of(1, 2, 3);
+    const source2$ = of(4, 5, 6);
+    const source3$ = of(7, 8, 9);
+
+    const result$ = concat(source1$, source2$, source3$);
+
+    result$.subscribe(value => console.log("concat observables", value));
+
+  }
 
 
 }

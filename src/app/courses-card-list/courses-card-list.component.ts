@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Course } from "../model/course";
+
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { CourseDialogComponent } from "../course-dialog/course-dialog.component";
+import { Course } from '../model/course';
 
 @Component({
     selector: 'courses-card-list',
@@ -10,8 +11,7 @@ import { CourseDialogComponent } from "../course-dialog/course-dialog.component"
 })
 export class CoursesCardListComponent implements OnInit {
 
-    @Input()
-    courses: Course[];
+    @Input() courses: Course[];
 
     constructor(private dialog: MatDialog) {
     }
