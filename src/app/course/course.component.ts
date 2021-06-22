@@ -1,3 +1,4 @@
+import { CustomObserableService } from './../common/custom-obserable.service';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { Course } from "../model/course";
@@ -24,31 +25,65 @@ import { Lesson } from '../model/lesson';
 })
 export class CourseComponent implements OnInit, AfterViewInit {
 
-
+    courseId: string;
     course$: Observable<Course>;
     lessons$: Observable<Lesson[]>;
 
-
     @ViewChild('searchInput', { static: true }) input: ElementRef;
 
-    constructor(private route: ActivatedRoute) {
+    constructor(
+        private route: ActivatedRoute,
+        public customObserableService: CustomObserableService
+    ) {
 
 
     }
 
     ngOnInit() {
-
-        const courseId = this.route.snapshot.params['id'];
-
-
-
+        this.getCouseId();
+        this.getCouse();
     }
 
     ngAfterViewInit() {
+        this.searchTextOndebouce();
+    }
+
+    public getCouseId(): void {
+        this.courseId = this.route.snapshot.params['id'];
+    }
+
+    public getCouse(): void {
+        this.course$ = this.customObserableService.httpCustomObservable(`/api/courses/${this.courseId}`);
+    }
 
 
+    public loadLessons(search = ''): Observable<Lesson[]> {
+        return this.customObserableService.httpCustomObservable(`/api/lessons?courseId=${this.courseId}&pageSize=100&filter=${search}`)
+            .pipe(
+                map(res => res["payload"])
+            );
+    }
 
 
+    // debounceTime(): Use debouce Time to emit the observable
+    // distinctUntilChanged(): it gives the unique value
+    public searchTextOndebouce(): void {
+        const searchLessons$: Observable<Lesson[]> = fromEvent<any>(this.input.nativeElement, 'keyup')
+            .pipe(
+                map(event => event.target.value),
+                debounceTime(400),
+                distinctUntilChanged(),
+                switchMap(search => this.loadLessons(search))
+            )
+
+
+        const initialLessons$: Observable<Lesson[]> = this.loadLessons();
+
+        this.lessons$ = concat(initialLessons$, searchLessons$);
+
+
+        console.log("lesson", this.lessons$);
+        // Note : search is working but it is not updating the its value.
     }
 
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { concat, fromEvent, interval, of, timer } from 'rxjs';
+import { concat, interval, of, timer, merge, fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,9 @@ export class AppComponent implements OnInit {
 
     // this.subscribingInterval();
     // this.combineTwoObservable();
-    this.intervalUnsubscription();
-    this.observableConcatanation();
+    // this.intervalUnsubscription();
+    // this.observableConcatanation();
+    // this.observableMerging();
   }
 
 
@@ -61,7 +63,7 @@ export class AppComponent implements OnInit {
     })
   }
 
-  // Problem: As the combination of different streams growns, it creates a call-back hell conditions. This is not good.Hence, in javascript,we have RxJs library. 
+  // Problem: As the combination of different streams growns, it creates a callback hell conditions. This is not good.Hence, in javascript,we have RxJs library. 
 
   /////////////////// RxJs ////////////////////////////////////
   // RxJs(Reactive Extension For Javascript):
@@ -150,7 +152,17 @@ export class AppComponent implements OnInit {
     const result$ = concat(source1$, source2$, source3$);
 
     result$.subscribe(value => console.log("concat observables", value));
+  }
 
+
+  // Merging observable:
+
+  public observableMerging() {
+    const interval1$ = interval(1000);
+    const interval2$ = interval1$.pipe(map(val => val * 10));
+
+    const result$ = merge(interval1$, interval2$);
+    result$.subscribe(console.log);
   }
 
 
