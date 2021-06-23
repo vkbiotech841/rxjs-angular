@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from "../model/course";
-import { interval, Observable, of, timer } from 'rxjs';
-import { catchError, delayWhen, map, retryWhen, shareReplay, tap } from 'rxjs/operators';
+import { interval, Observable, of, throwError, timer } from 'rxjs';
+import { catchError, delayWhen, finalize, map, retryWhen, shareReplay, tap } from 'rxjs/operators';
 import { CustomObserableService } from '../common/custom-obserable.service';
 
 
@@ -36,9 +36,31 @@ export class HomeComponent implements OnInit {
         // second observable and map() operator
         const courses$ = https$
             .pipe(
+                // catchError(err => {
+                //     console.log("Error Occurred", err)
+                //     return throwError(err)
+                // }),
+                // finalize(() => {
+                //     console.log("Finished executed..")
+                // }),
                 tap(() => console.log("HTTP request executed")),
                 map(res => Object.values(res["payload"])),
-                shareReplay()
+                shareReplay(),
+                // catchError(err => of([
+                //     {
+                //         id: 0,
+                //         description: "RxJs In Practice Course",
+                //         iconUrl: 'https://s3-us-west-1.amazonaws.com/angular-university/course-images/rxjs-in-practice-course.png',
+                //         courseListIcon: 'https://angular-academy.s3.amazonaws.com/main-logo/main-page-logo-small-hat.png',
+                //         longDescription: "Understand the RxJs Observable pattern, learn the RxJs Operators via practical examples",
+                //         category: 'BEGINNER',
+                //         lessonsCount: 10
+                //     }
+                // ])),
+                retryWhen(errors => errors
+                    .pipe(delayWhen(() => timer(2000)))
+                )
+
             );
 
 
@@ -82,6 +104,12 @@ export class HomeComponent implements OnInit {
 
         // Method 03: One api call and sharing of obserable using shareReplay() operator
         // Simply we need to adding shareReply() operator in the first observable.
+
+
+        // ERROR Handling stretegy:
+        // (1) Catch the error (catchError() operator): it will catch the error and provide an alternative observable in replacement to the actual observable. Here, we are using of () operator which gives only one value and we are return only only course description.
+        // (2) throwError method: first we can throwError then we can release the memory spaces using finalize () operator.
+        // (2) Retry method: retryWhen() operator
 
 
 

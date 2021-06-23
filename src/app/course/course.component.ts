@@ -83,7 +83,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
 
         console.log("lesson", this.lessons$);
-        // Note : search is working but it is not updating the its value.
+        // Note : while concat two observable. Do not subscribe any of the the observable. if you subscribe any of the observable, then final observable will not be compatable and it wom't work. Behind the scene, concat method itself subscribe both the observable.
     }
 
 
