@@ -11,7 +11,7 @@ import { Course } from '../model/course';
 })
 export class CoursesCardListComponent implements OnInit {
 
-    @Input() courses: Course[];
+    @Input() public courses: Course[];
 
     constructor(private dialog: MatDialog) {
     }
@@ -20,7 +20,7 @@ export class CoursesCardListComponent implements OnInit {
 
     }
 
-    editCourse(course: Course) {
+    public editCourse(course: Course) {
         const dialogConfig = new MatDialogConfig();
         dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;

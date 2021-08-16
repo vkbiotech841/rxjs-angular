@@ -32,8 +32,6 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.saveCourseWhileTyping();
-
-
     }
 
     ngAfterViewInit() {
@@ -80,7 +78,7 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
 
     //   Here, we want to prevent the multiple clicks on save button and prevent the multiple api calls. Hence, we are using exhaustMap();
-    // exhaustMap(): it ignors the coming observabl, if an observalbe is already emitting.Hence,in this way here, we can ignor the multiple api calls in button clicks.
+    // exhaustMap(): it ignors the coming observable, if an observable is already emitting.Hence,in this way here, we can ignor the multiple api calls in button clicks.
     public saveCourseOnSaveButton() {
         fromEvent(this.saveButton.nativeElement, 'click')
             .pipe(

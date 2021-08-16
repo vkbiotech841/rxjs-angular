@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit {
                 // finalize(() => {
                 //     console.log("Finished executed..")
                 // }),
-                tap(() => console.log("HTTP request executed")),
+                tap((value) => console.log("HTTP request executed", value)),
                 map(res => Object.values(res["payload"])),
                 shareReplay(),
                 // catchError(err => of([
@@ -83,8 +83,7 @@ export class HomeComponent implements OnInit {
 
         // Method 02: Using async pipe in the html
 
-        // In this is async pipe does the subscription and unsubscription together. Hence, prevent memory leaks. This is more appropriate method of data transfer.
-        // For this instread of subscribing the Courses observerable, we need to creaete a new observable.
+        // In this is async pipe does the subscription and unsubscription together. Hence, prevent memory leaks. This is more appropriate method of data transfer.For this instead of subscribing the Courses observerable, we need to creaete a new observable and subscribe it using async pipe in the HTML.
 
         // asyn subscription 01
         this.beginnerCourses$ = courses$
@@ -93,17 +92,17 @@ export class HomeComponent implements OnInit {
                     courses.filter(course => course.category === "BEGINNER"))
             );
 
-        // asyn subscription 01
+        // asyn subscription 02
         this.advanceCourses$ = courses$
             .pipe(
                 map((courses: Course[]) =>
                     courses.filter(course => course.category === "ADVANCED"))
             );
 
-        // Problem: Here, we have two subscription that means two times api is getting called.Hence this is not a good way. We need to reduce the api calls.
+        // Problem: Here, we have two subscription (one for beginnerCourses$ and another for advanceCourses$  ) that means two times api is getting called. Hence this is not a good way. We need to reduce the api calls.
 
         // Method 03: One api call and sharing of obserable using shareReplay() operator
-        // Simply we need to adding shareReply() operator in the first observable.
+        // Simply we need to adding shareReply() operator in the first observable and it will not call two APIs. Instead it will share the result on subscribtion.
 
 
         // ERROR Handling stretegy:
